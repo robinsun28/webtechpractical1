@@ -1,15 +1,17 @@
 async function handleSubmit(e) {
     e.preventDefault();
-    const result = document.getElementById("result");
-    result.innerHTML = "";
-  
-    const profile = await getProfile();
-  
+  document.getElementById("result-head").innerHTML = "";
+  const result = document.getElementById("result");
+  result.innerHTML = "";
+
+  const profile = await getProfile();
+
+  if (profile != null) {
     document
       .getElementById("result-div")
       .classList.add("container", "bg-white", "p-4");
     document.getElementById("result-head").innerHTML = "Github Profile Details";
-  
+
     const li1 = document.createElement("li");
     li1.innerHTML = "Username: " + profile.login;
     const li2 = document.createElement("li");
@@ -18,12 +20,18 @@ async function handleSubmit(e) {
     li3.innerHTML = "CREATED AT: " + profile.created_at;
     const li4 = document.createElement("li");
     li4.innerHTML = "URL: " + profile.url;
-  
+
     result.appendChild(li1);
     result.appendChild(li2);
     result.appendChild(li3);
     result.appendChild(li4);
+    document
+      .getElementById("result-div")
+      .classList.add("container", "bg-white", "p-4");
+    document.getElementById("result-head").innerHTML = "Github Profile Details";
   }
+}
+  
   
   document.getElementById("myform").addEventListener("submit", handleSubmit);
   
@@ -32,6 +40,15 @@ async function handleSubmit(e) {
   
     try {
       const response = await fetch(`https://api.github.com/users/${username}`);
+      const rate = response.headers.get("X-RateLimit-Remaining");
+      if (rate === 0) {
+        alert("Rate Limit");
+        return;
+      }
+      if (response.status === 404) {
+        alert("User not found!");
+        return;
+      }
       profile = await response.json();
       console.log(profile);
       return profile;
