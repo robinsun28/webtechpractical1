@@ -42,11 +42,17 @@ async function handleSubmit(e) {
       const response = await fetch(`https://api.github.com/users/${username}`);
       const rate = response.headers.get("X-RateLimit-Remaining");
       if (rate === 0) {
-        alert("Rate Limit");
+        document
+        .getElementById("result-div")
+        .classList.add("container", "bg-white", "p-4");
+      document.getElementById("result-head").innerHTML = "Rate  Limit exceeded!";
         return;
       }
       if (response.status === 404) {
-        alert("User not found!");
+        document
+        .getElementById("result-div")
+        .classList.add("container", "bg-white", "p-4");
+      document.getElementById("result-head").innerHTML = "User not found!";
         return;
       }
       profile = await response.json();
