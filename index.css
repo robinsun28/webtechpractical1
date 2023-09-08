@@ -4,3 +4,6 @@
     border: 1px solid #2892da;
   }
   
+  li {
+    list-style-type: none;
+  }
